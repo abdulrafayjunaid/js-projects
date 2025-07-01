@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Task Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6e48aa;
+            --primary-dark: #3b2667;
+            --secondary: #9d50bb;
+            --accent: #4776e6;
+            --danger: #ff3860;
+            --success: #2ecc71;
+            --warning: #ff9f43;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --neon-glow: 0 0 10px rgba(110, 72, 170, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+      
+        .app-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .app-title {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(110, 72, 170, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        .app-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+        }
+
+        /* Form Styles */
+        #form-control {
+            background: rgba(26, 26, 46, 0.7);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+            max-width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            transition: all 0.3s ease;
+        }
+
+        #form-control:hover {
+            box-shadow: 0 8px 32px rgba(110, 72, 170, 0.4);
+        }
+
+        #form-control label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #form-control input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 3px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        #form-control input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(110, 72, 170, 0.5);
+            border-left: 3px solid var(--secondary);
+        }
+
+        #form-control input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        #form-control button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(110, 72, 170, 0.4);
+        }
+
+        #form-control button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110, 72, 170, 0.6);
+        }
+
+        /* Main Container */
+        .box {
+            display: flex;
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .box:hover {
+            box-shadow: 0 8px 32px rgba(110, 72, 170, 0.4);
+        }
+
+        /* Column Styles */
+        .column {
+            flex: 1;
+            padding: 1.5rem;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .column h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .column h2::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            box-shadow: 0 0 10px rgba(110, 72, 170, 0.8);
+        }
+
+        #active {
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Task Card Styles */
+        .user-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(110, 72, 170, 0.3);
+        }
+
+        .user-card h3 {
+            margin-top: 0;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-card p {
+            margin: 0.5rem 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .user-card p strong {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .user-card button {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .user-card button:first-child {
+            background: var(--success);
+            box-shadow: 0 2px 10px rgba(46, 204, 113, 0.3);
+        }
+
+        .user-card button:first-child:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        #completed .user-card button:first-child {
+            background: var(--warning);
+            box-shadow: 0 2px 10px rgba(255, 159, 67, 0.3);
+        }
+
+        #completed .user-card button:first-child:hover {
+            background: #f39c12;
+        }
+
+        .user-card button:last-child {
+            background: var(--danger);
+            box-shadow: 0 2px 10px rgba(255, 56, 96, 0.3);
+        }
+
+        .user-card button:last-child:hover {
+            background: #e74c3c;
+            transform: translateY(-2px);
+        }
+
+        /* Overdue Task Styles */
+        .user-card.overdue {
+            border-left: 3px solid var(--danger);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px rgba(255, 56, 96, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(255, 56, 96, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(255, 56, 96, 0.3); }
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 3rem 1rem;
+            font-size: 1rem;
+        }
+
+        /* Glow effect for active elements */
+        .glow {
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px rgba(110, 72, 170, 0.5);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(110, 72, 170, 0.8);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .box {
+                flex-direction: column;
+            }
+            
+            #active {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .app-title {
+                font-size: 2rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+
+        /* Confirmation dialog */
+        .confirmation-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .confirmation-dialog.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .dialog-content {
+            background: var(--dark);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary);
+            text-align: center;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .dialog-buttons button {
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .confirm-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+        }
+
+        .cancel-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1 class="app-title">NEON TASK MANAGER</h1>
+            <p class="app-subtitle">Organize your workflow with deadlines</p>
+        </header>
+
+        <form id="form-control" class="glow">
+            <label for="name-control">Task Name</label>
+            <input type="text" id="name-control" placeholder="Enter task name" required>
+
+            <label for="desc-control">Description</label>
+            <input type="text" id="desc-control" placeholder="Write your task description">
+
+            <label for="number-control">Days to Complete</label>
+            <input type="number" id="number-control" min="1" placeholder="Enter days" required>
+             
+            <button type="submit">Add New Task</button>
+        </form>
+
+        <div class="box glow">
+            <div id="active" class="column">
+                <h2>Active Tasks</h2>
+                <div class="empty-state">No active tasks found</div>
+            </div>
+            <div id="completed" class="column">
+                <h2>Completed Tasks</h2>
+                <div class="empty-state">No completed tasks found</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="confirmation-dialog" id="confirmationDialog">
+        <div class="dialog-content">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete this task? This action cannot be undone.</p>
+            <div class="dialog-buttons">
+                <button class="cancel-btn" id="cancelDelete">Cancel</button>
+                <button class="confirm-btn" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+        let data = JSON.parse(localStorage.getItem('all')) || [];
+        let currentIndexToDelete = null;
+        
+        const form = document.getElementById('form-control');
+        const name = document.getElementById('name-control');
+        const desc = document.getElementById('desc-control');
+        const number = document.getElementById('number-control');
+        const activeDiv = document.getElementById('active');
+        const completedDiv = document.getElementById('completed');
+        const confirmationDialog = document.getElementById('confirmationDialog');
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
+
+        
+        setInterval(checkOverdueTasks, 10000); 
+        
+        displayuser();
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            
+          const days = parseInt(number.value.trim()) || 1;
+const deadline = new Date();
+deadline.setDate(deadline.getDate() + days);
+
+
+            
+            data.push({
+                username: name.value.trim(),
+                userdesc: desc.value.trim(),
+                usernumber: number.value.trim(),
+                status: "active",
+                createdAt: new Date().toISOString(),
+                deadline: deadline.toISOString(), 
+                isLate: false,
+                lateAlertShown: false
+            });
+
+            localStorage.setItem('all', JSON.stringify(data));
+            displayuser();
+            form.reset();
+            
+            
+            const submitBtn = event.target.querySelector('button');
+            submitBtn.textContent = 'Task Added!';
+            submitBtn.style.background = 'linear-gradient(to right, var(--success), #27ae60)';
+            setTimeout(() => {
+                submitBtn.textContent = 'Add New Task';
+                submitBtn.style.background = 'linear-gradient(to right, var(--primary), var(--secondary))';
+            }, 1500);
+        });
+        
+        
+        function checkOverdueTasks() {
+            const now = new Date();
+            let needsUpdate = false;
+            
+            data.forEach(task => {
+                if (task.status === "active" && !task.isLate) {
+                    const deadline = new Date(task.deadline);
+                    if (now > deadline) {
+                        task.isLate = true;
+                        needsUpdate = true;
+                        
+
+                        if (!task.lateAlertShown) {
+                            alert(` Task "${task.username}" is now OVERDUE!`);
+                            task.lateAlertShown = true;
+                        }
+                    }
+                }
+            });
+            
+            if (needsUpdate) {
+                localStorage.setItem('all', JSON.stringify(data));
+                displayuser();
+            }
+        }
+        
+       
+        function displayuser() {
+            activeDiv.innerHTML = '<h2>Active Tasks</h2>';
+            completedDiv.innerHTML = '<h2>Completed Tasks</h2>';
+            
+            if (data.length === 0) {
+                activeDiv.innerHTML += '<div class="empty-state">No tasks found</div>';
+                completedDiv.innerHTML += '<div class="empty-state">No tasks found</div>';
+                return;
+            }
+            
+            let activeCount = 0;
+            let completedCount = 0;
+            
+            const sortedData = [...data].sort((a, b) => 
+                new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+            
+            sortedData.forEach((user, index) => {
+                const originalIndex = data.findIndex(item => 
+                    item.username === user.username && 
+                    item.userdesc === user.userdesc && 
+                    item.usernumber === user.usernumber);
+                
+                let daysRemainingText = '';
+                if (user.status === "active" && !user.isLate) {
+                    const now = new Date();
+                    const deadline = new Date(user.deadline);
+                    const diffTime = deadline - now;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    daysRemainingText = `<p><strong>Days left:</strong> ${diffDays}</p>`;
+                }
+                
+                const card = document.createElement('div');
+                card.className = `user-card ${user.isLate ? 'overdue' : ''}`;
+                card.innerHTML = `
+                    <h3>${user.username}</h3>
+                    <p><strong>Description:</strong> ${user.userdesc}</p>
+                    <p><strong>Days allocated:</strong> ${user.usernumber}</p>
+                    ${user.isLate ? '<p style="color: var(--danger)"><strong>STATUS: OVERDUE!</strong></p>' : daysRemainingText}
+                    <div class="button-group">
+                        ${user.status === "active" ? 
+                            `<button onclick="completed(${originalIndex})">✓ Complete</button>` : 
+                            `<button onclick="active(${originalIndex})">↻ Reactivate</button>`}
+                        <button onclick="showDeleteConfirmation(${originalIndex})">✕ Delete</button>
+                    </div>
+                `;
+                
+                if (user.status === "completed") {
+                    completedDiv.appendChild(card);
+                    completedCount++;
+                } else {
+                    activeDiv.appendChild(card);
+                    activeCount++;
+                }
+            });
+            
+            if (activeCount === 0) {
+                activeDiv.innerHTML += '<div class="empty-state">No active tasks found</div>';
+            }
+            if (completedCount === 0) {
+                completedDiv.innerHTML += '<div class="empty-state">No completed tasks found</div>';
+            }
+        }
+
+        function completed(index) {
+            data[index].status = 'completed';
+            data[index].completedAt = new Date().toISOString();
+            localStorage.setItem('all', JSON.stringify(data));
+            displayuser();
+            
+            
+            const activeColumn = document.getElementById('active');
+            activeColumn.classList.add('glow');
+            setTimeout(() => activeColumn.classList.remove('glow'), 1000);
+        }
+
+        function active(index) {
+            data[index].status = 'active';
+            localStorage.setItem('all', JSON.stringify(data));
+            displayuser();
+            
+            const completedColumn = document.getElementById('completed');
+            completedColumn.classList.add('glow');
+            setTimeout(() => completedColumn.classList.remove('glow'), 1000);
+        }
+
+        function showDeleteConfirmation(index) {
+            currentIndexToDelete = index;
+            confirmationDialog.classList.add('active');
+        }
+
+        cancelDeleteBtn.addEventListener('click', () => {
+            confirmationDialog.classList.remove('active');
+            currentIndexToDelete = null;
+        });
+
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (currentIndexToDelete !== null) {
+                data.splice(currentIndexToDelete, 1);
+                localStorage.setItem('all', JSON.stringify(data));
+                displayuser();
+                confirmationDialog.classList.remove('active');
+                currentIndexToDelete = null;
+                
+                document.body.classList.add('glow');
+                setTimeout(() => document.body.classList.remove('glow'), 500);
+            }
+        });
+
+        confirmationDialog.addEventListener('click', (e) => {
+            if (e.target === confirmationDialog) {
+                confirmationDialog.classList.remove('active');
+                currentIndexToDelete = null;
+            }
+        });
+    </script>
+</body>
+</html>
