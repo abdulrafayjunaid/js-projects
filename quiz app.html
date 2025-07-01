@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        input[type="number"] {
+            padding: 10px;
+            width: 100px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #display {
+            margin-top: 20px;
+        }
+        #display h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        #display button {
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+        }
+        #score {
+            margin-top: 10px;
+        }
+        #q h1 {
+            font-size: 28px;
+            color: green;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <input type="number" id="score">
+    <button onclick="see()">start</button>
+    <div id="display"></div>
+    <div id="q"></div>
+    <script> 
+        let box1=document.getElementById('box1')
+        let question=document.getElementById('question')
+        let choice1=document.getElementById('choice1')
+        let choice2=document.getElementById('choice2')
+        let choice3=document.getElementById('choice3')
+        let choice4=document.getElementById('choice4')
+        let display=document.getElementById('display');
+        let q=document.getElementById('q')
+        let questionnumber=1;
+        let render=document.getElementById('score').innerHTML="";
+
+        function finished() {
+             let score = questionnumber ; 
+             q.innerHTML = `<h1>Quiz Finished! Your score is ${score}</h1>;
+             <button onclick="restart()">Restart Quiz</button>`
+
+        }
+        function restart() {
+           display.innerHTML = "";
+           q.innerHTML = "";
+           questionnumber = 1;
+           document.getElementById('score').value = "";
+           see();
+        }
+
+
+         let Q1=[];
+         let Q2=[];
+         let Q3=[];
+         let Q4=[];
+         let Q5=[];
+         let Q6=[];
+         let Q7=[];
+         let Q8=[];
+         let Q9=[];
+         let Q10=[];
+
+        Q1.push({
+            question:'where is burj khalifa located',
+            choice1:'saudia arabia',
+            choice2:'china',
+            choice3:'duabai'
+        })
+        Q2.push({
+            question:'what  is the capital of germany',
+            choice1:'berlin',
+            choice2:'moscow',
+            choice3:'bejing',
+            choice4:'mumbai'
+        })
+        Q3.push({
+            question:'what  is the most usefull programming language in artificial itellegence',
+            choice1:'python',
+            choice2:'js',
+            choice3:'sql',
+            choice4:'c++'
+        })
+        Q4.push({
+            question:'what is the global variable of js',
+            choice1:'var',
+            choice2:'const',
+            choice3:'let',
+            choice4:'this'
+        })
+        Q5.push({
+            question:'whre is the main branch of KFC',
+            choice1:'california',
+            choice2:'berlin',
+            choice3:'iran',
+            choice4:'mumbai'
+        })
+        Q6.push({
+            question:'what is git hub',
+            choice1:'software based company',
+            choice2:'military agency',
+            choice3:'webdevelopment agency',
+            choice4:'graphic desining webiste'
+        })
+        Q7.push({
+            question:'whta is the full form of CIA',
+            choice1:'centrel intellegence agency',
+            choice2:'private military company',
+            choice3:'united nations',
+            choice4:'anti criminal organization'
+        })
+        Q8.push({
+            question:'who is the biggest exporter of oil in middle east',
+            choice1:'saudia arabia',
+            choice2:'oman',
+            choice3:'yemen',
+            choice4:'iraq'
+        })
+        Q9.push({
+            question:'what is the value of dollar in PKR',
+            choice1:'280rs',
+            choice2:'310rs',
+            choice3:'800rs',
+            choice4:'1000rs'
+        })
+        Q10.push({
+            question:'what is the capital of japan',
+            choice1:'tokyo',
+            choice2:'bombay',
+            choice3:'palestine',
+            choice4:'colombia'
+        })
+        window.right=function(clickedbutton){
+            clickedbutton.style.backgroundColor='green';
+            questionnumber++;
+           let render=document.getElementById('score').value=questionnumber;
+            display.innerHTML="";
+            if(questionnumber === 2){
+                loadnextquestion2()
+            }else if(questionnumber === 3){
+                loadnextquestion3()
+            }else if(questionnumber === 4){
+                loadnextquestion4()
+            }else if(questionnumber === 5){
+                loadnextquestion5()
+            }else if(questionnumber === 6){
+                loadnextquestion6()
+            }else if(questionnumber === 7){
+                loadnextquestion7()
+            }else if(questionnumber === 8){
+                loadnextquestion8()
+            }else if(questionnumber === 9){
+                loadnextquestion9()
+            }else{
+                finished()
+                 
+            }
+        }
+        window.wrong1=function(wrongbutton){
+            alert('your choice is wrong');
+        }    
+        window.wrong2=function(wrongbutton){
+           alert('your choice is wrong');
+        }
+        window.wrong3=function(wrongbutton){
+           alert('your choice is wrong');
+        }
+        function see(){
+            loadnextquestion1()
+        }
+        function loadnextquestion1(){
+                 Q1.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a;
+            });
+        }
+        function loadnextquestion2(){
+            Q2.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a
+            });
+        }
+        function loadnextquestion3(){
+            Q3.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a
+            });
+        }
+        function loadnextquestion4(){
+            Q4.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a
+            });
+        }
+        function loadnextquestion5(){
+            Q5.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a
+            });
+        }
+        function loadnextquestion6(){
+            Q6.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a
+            });
+        }
+        function loadnextquestion7(){
+            Q7.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a
+            });
+        }
+        function loadnextquestion8(){
+            Q8.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a
+            });   
+        }
+        function loadnextquestion9(){
+            Q9.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a
+            });    
+        }
+        function loadnextquestion10(){
+            Q10.forEach(key => {
+                let a= `<div id="box1">
+                         <h1 id="question">${key.question}</h1>
+                         <button id="choice1" onclick="right(this)">${key.choice1}</button>
+                         <button id="choice2" onclick="wrong1(this)">${key.choice2}</button>
+                         <button id="choice3" onclick="wrong2(this)">${key.choice3}</button>
+                         <button id="choice4" onclick="wrong3(this)">${key.choice4}</button>
+                    </div>
+               `
+               display.innerHTML+=a
+            });
+        }
+
+    </script>
+</body>
+</html>
