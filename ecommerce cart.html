@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modern Shopping Cart</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4cc9f0;
+      --danger: #ef233c;
+      --gray: #6c757d;
+      --border: #e0e0e0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+      color: var(--dark);
+      line-height: 1.6;
+      padding-bottom: 60px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      padding: 20px 0;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .logo i {
+      color: var(--accent);
+    }
+
+    .cart-icon {
+      position: relative;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 30px 0;
+      color: var(--secondary);
+      font-weight: 700;
+      font-size: 2.5rem;
+    }
+
+    .products-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .product-img {
+      height: 180px;
+      background: linear-gradient(45deg, #e0e7ff, #dbeafe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .product-img i {
+      font-size: 4rem;
+      color: var(--primary);
+      opacity: 0.8;
+    }
+
+    .product-content {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .productname {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--dark);
+    }
+
+    .price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    .add-to-cart {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition);
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .add-to-cart:hover {
+      background: var(--secondary);
+      transform: scale(1.02);
+    }
+
+    .add-to-cart:disabled {
+      background: var(--success);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .add-to-cart:disabled i {
+      display: inline-block;
+    }
+
+    .cart-section {
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 25px;
+      margin-top: 20px;
+    }
+
+    .cart-section h2 {
+      color: var(--secondary);
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cart-section h2 i {
+      color: var(--accent);
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 30px;
+      color: var(--gray);
+    }
+
+    .empty-cart i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: var(--border);
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .cart-item:hover {
+      background: rgba(67, 97, 238, 0.05);
+    }
+
+    .item-img {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(45deg, #e0e7ff, #dbeafe);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item-img i {
+      font-size: 1.8rem;
+      color: var(--primary);
+    }
+
+    .item-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .item-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .item-price {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quantity-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: var(--light);
+      font-weight: bold;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quantity-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .quantity {
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+
+    .remove-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .item-total {
+      font-weight: 700;
+      min-width: 80px;
+      text-align: right;
+    }
+
+    #total {
+      text-align: right;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid var(--border);
+      color: var(--secondary);
+    }
+
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .checkout-btn:hover {
+      background: #d0006f;
+      transform: translateY(-2px);
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .products-container {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      
+      .cart-item {
+        grid-template-columns: auto 1fr;
+        grid-template-areas: 
+          "img info"
+          "controls total";
+        gap: 10px;
+      }
+      
+      .item-img {
+        grid-area: img;
+      }
+      
+      .item-info {
+        grid-area: info;
+      }
+      
+      .quantity-controls {
+        grid-area: controls;
+        justify-self: start;
+      }
+      
+      .item-total {
+        grid-area: total;
+        justify-self: end;
+        text-align: right;
+      }
+      
+      .remove-btn {
+        position: absolute;
+        right: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .products-container {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* Animation for cart interaction */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .pulse {
+      animation: pulse 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-shopping-bag"></i>
+          <span>TechShop</span>
+        </div>
+        <div class="cart-icon" id="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1><i class="fas fa-laptop"></i> Tech Products</h1>
+    
+    <div class="products-container">
+      <div class="product" data-id="1">
+        <div class="product-img">
+          <i class="fas fa-laptop"></i>
+        </div>
+        <div class="product-content">
+          <div class="productname">Laptop</div>
+          <div class="price">₹30,000</div>
+          <button onclick="addToCart(1)" class="add-to-cart">
+            <i class="fas fa-cart-plus"></i> Add To Cart
+          </button>
+        </div>
+      </div>
+      
+      <div class="product" data-id="2">
+        <div class="product-img">
+          <i class="fas fa-volume-up"></i>
+        </div>
+        <div class="product-content">
+          <div class="productname">Speaker</div>
+          <div class="price">₹5,000</div>
+          <button onclick="addToCart(2)" class="add-to-cart">
+            <i class="fas fa-cart-plus"></i> Add To Cart
+          </button>
+        </div>
+      </div>
+      
+      <div class="product" data-id="3">
+        <div class="product-img">
+          <i class="fas fa-print"></i>
+        </div>
+        <div class="product-content">
+          <div class="productname">Printer</div>
+          <div class="price">₹20,000</div>
+          <button onclick="addToCart(3)" class="add-to-cart">
+            <i class="fas fa-cart-plus"></i> Add To Cart
+          </button>
+        </div>
+      </div>
+      
+      <div class="product" data-id="4">
+        <div class="product-img">
+          <i class="fas fa-keyboard"></i>
+        </div>
+        <div class="product-content">
+          <div class="productname">Keyboard</div>
+          <div class="price">₹1,000</div>
+          <button onclick="addToCart(4)" class="add-to-cart">
+            <i class="fas fa-cart-plus"></i> Add To Cart
+          </button>
+        </div>
+      </div>
+      
+      <div class="product" data-id="5">
+        <div class="product-img">
+          <i class="fas fa-mouse"></i>
+        </div>
+        <div class="product-content">
+          <div class="productname">Mouse</div>
+          <div class="price">₹500</div>
+          <button onclick="addToCart(5)" class="add-to-cart">
+            <i class="fas fa-cart-plus"></i> Add To Cart
+          </button>
+        </div>
+      </div>
+      
+      <div class="product" data-id="6">
+        <div class="product-img">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <div class="product-content">
+          <div class="productname">Mobile</div>
+          <div class="price">₹40,000</div>
+          <button onclick="addToCart(6)" class="add-to-cart">
+            <i class="fas fa-cart-plus"></i> Add To Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-section">
+      <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+      <div id="cart"></div>
+      <div id="total"></div>
+      <button class="checkout-btn">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    const products = {
+      1: { name: "Laptop", price: 30000, icon: "fas fa-laptop" },
+      2: { name: "Speaker", price: 5000, icon: "fas fa-volume-up" },
+      3: { name: "Printer", price: 20000, icon: "fas fa-print" },
+      4: { name: "Keyboard", price: 1000, icon: "fas fa-keyboard" },
+      5: { name: "Mouse", price: 500, icon: "fas fa-mouse" },
+      6: { name: "Mobile", price: 40000, icon: "fas fa-mobile-alt" }
+    };
+
+    let cartItems = [];
+    const cartElement = document.getElementById('cart');
+    const totalElement = document.getElementById('total');
+    const cartCountElement = document.querySelector('.cart-count');
+    const cartIcon = document.getElementById('cart-icon');
+
+    function addToCart(productId) {
+      const product = products[productId];
+      const existingItem = cartItems.find(item => item.id === productId);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cartItems.push({
+          id: productId,
+          name: product.name,
+          price: product.price,
+          icon: product.icon,
+          quantity: 1
+        });
+      }
+      
+      // Update button state
+      const button = document.querySelector(`.product[data-id="${productId}"] .add-to-cart`);
+      button.innerHTML = '<i class="fas fa-check"></i> Added to Cart';
+      button.disabled = true;
+      
+      // Update cart count
+      updateCartCount();
+      
+      // Render cart with animation
+      renderCart();
+      
+      // Add pulse animation to cart icon
+      cartIcon.classList.add('pulse');
+      setTimeout(() => cartIcon.classList.remove('pulse'), 500);
+    }
+
+    function updateCartCount() {
+      const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+      cartCountElement.textContent = count;
+    }
+
+    function renderCart() {
+      cartElement.innerHTML = '';
+      
+      if (cartItems.length === 0) {
+        cartElement.innerHTML = `
+          <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <p>Your cart is empty</p>
+          </div>
+        `;
+        totalElement.textContent = '';
+        return;
+      }
+      
+      let total = 0;
+      
+      cartItems.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        const itemElement = document.createElement('div');
+        itemElement.className = 'cart-item';
+        itemElement.innerHTML = `
+          <div class="item-img">
+            <i class="${item.icon}"></i>
+          </div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-price">₹${item.price.toLocaleString()}</div>
+          </div>
+          <div class="quantity-controls">
+            <button class="quantity-btn" onclick="changeQuantity(${index}, -1)">-</button>
+            <span class="quantity">${item.quantity}</span>
+            <button class="quantity-btn" onclick="changeQuantity(${index}, 1)">+</button>
+            <button class="remove-btn" onclick="removeItem(${index})">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+          <div class="item-total">₹${itemTotal.toLocaleString()}</div>
+        `;
+        
+        cartElement.appendChild(itemElement);
+      });
+      
+      totalElement.innerHTML = `Total: ₹${total.toLocaleString()}`;
+    }
+
+    function changeQuantity(index, change) {
+      const item = cartItems[index];
+      item.quantity += change;
+      
+      if (item.quantity < 1) {
+        removeItem(index);
+        return;
+      }
+      
+      renderCart();
+    }
+
+    function removeItem(index) {
+      const removedItem = cartItems.splice(index, 1)[0];
+      
+      // Re-enable the add to cart button
+      const button = document.querySelector(`.product[data-id="${removedItem.id}"] .add-to-cart`);
+      if (button) {
+        button.innerHTML = '<i class="fas fa-cart-plus"></i> Add To Cart';
+        button.disabled = false;
+      }
+      
+      updateCartCount();
+      renderCart();
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartCount();
+      renderCart();
+    });
+  </script>
+</body>
+</html>
