@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        #box {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        #quotes {
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        #quotes::before {
+            content: '"';
+            font-size: 60px;
+            color: #e0e0e0;
+            line-height: 0;
+            margin-bottom: 20px;
+        }
+        
+        #quotes p {
+            font-size: 22px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-style: italic;
+        }
+        
+        #quotes span {
+            font-size: 16px;
+            color: #666;
+            font-weight: 400;
+        }
+        
+        button {
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(74, 111, 165, 0.3);
+        }
+        
+        button:hover {
+            background-color: #3a5a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 111, 165, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            #box {
+                padding: 30px 20px;
+            }
+            
+            #quotes p {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <div id="quotes">
+            <p>Click the button to generate an inspirational quote</p>
+            <span></span>
+        </div>
+        <button onclick="call()">Generate Quote</button>
+    </div>
+
+    <script>
+        let quoteElement = document.getElementById('quotes');
+        
+        function call() {
+            quoteElement.innerHTML = '<p>Loading...</p><span></span>';
+            
+            fetch('https://api.api-ninjas.com/v1/quotes', {  
+                method: 'GET',
+                headers: {
+                    "X-Api-Key": "4tqaxeerj9PjthVkip1sHg==vzWEyjeDpUeluJSw",
+                }
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("API error");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                quoteElement.innerHTML = `<p>${data[0].quote}</p><span>— ${data[0].author}</span>`;
+            })
+            .catch((error) => {
+                console.error(error);
+                quoteElement.innerHTML = '<p>Failed to load quote. Please try again.</p><span></span>';
+            });
+        }
+    </script>
+</body>
+</html>
