@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Budget Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f0 100%);
+            color: #2b2d42;
+            min-height: 100vh;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #4361ee, #3f37c9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        @media (min-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-header i {
+            font-size: 1.5rem;
+            color: #4361ee;
+            margin-right: 12px;
+            background: rgba(67, 97, 238, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2b2d42;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #2b2d42;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-group label i {
+            margin-right: 10px;
+            color: #4361ee;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-family: 'Segoe UI', sans-serif;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4361ee;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            border: none;
+            padding: 16px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        button i {
+            font-size: 1.2rem;
+        }
+        
+        .btn-primary {
+            background: #4361ee;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            background: #3a5a8a;
+        }
+        
+        .btn-reset {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background: #c0392b;
+        }
+        
+        .expense-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .expense-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .expense-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #4361ee;
+            transition: all 0.3s ease;
+        }
+        
+        .expense-card:hover {
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .expense-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .expense-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2b2d42;
+        }
+        
+        .expense-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            padding: 0;
+        }
+        
+        .btn-edit {
+            background: rgba(76, 201, 240, 0.1);
+            color: #4cc9f0;
+        }
+        
+        .btn-edit:hover {
+            background: #4cc9f0;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: rgba(247, 37, 133, 0.1);
+            color: #f72585;
+        }
+        
+        .btn-delete:hover {
+            background: #f72585;
+            color: white;
+        }
+        
+        .expense-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4361ee;
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        @media (min-width: 576px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .summary-card h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2b2d42;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .summary-card h4 i {
+            color: #4361ee;
+        }
+        
+        .summary-card input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: #2b2d42;
+        }
+        
+        #totalid {
+            color: #e74c3c;
+        }
+        
+        #saving {
+            color: #2ecc71;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: #4361ee;
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Professional Budget Tracker</h1>
+            <p>Manage your finances efficiently with this intuitive budgeting tool</p>
+        </header>
+        
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-pen-to-square"></i>
+                    <h2>Budget Information</h2>
+                </div>
+                
+                <form id="form_id">
+                    <div class="input-group">
+                        <label><i class="fas fa-money-bill-wave"></i> Add Income</label>
+                        <input type="number" id="income_entry_field" placeholder="Enter your income">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fas fa-cart-shopping"></i> Expense 1</label>
+                        <input type="number" id="expense_entry_field1" placeholder="Enter expense amount">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fas fa-utensils"></i> Expense 2</label>
+                        <input type="number" id="expense_entry_field2" placeholder="Enter expense amount">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label><i class="fas fa-house"></i> Expense 3</label>
+                        <input type="number" id="expense_entry_field3" placeholder="Enter expense amount">
+                    </div>
+                </form>
+                
+                <div class="btn-container">
+                    <button class="btn-primary" onclick="boss()">
+                        <i class="fas fa-calculator"></i> Calculate Budget
+                    </button>
+                    <button class="btn-reset" onclick="globalremove()">
+                        <i class="fas fa-rotate"></i> Reset All
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie"></i>
+                    <h2>Budget Summary</h2>
+                </div>
+                
+                <div class="showing">
+                    <div class="expense-card">
+                        <div class="expense-header">
+                            <h3 id="hh1">Total Balance</h3>
+                            <div class="expense-actions">
+                                <button class="btn-icon btn-delete" onclick="del()">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="display_income" class="expense-value">0</div>
+                    </div>
+                    
+                    <div class="expense-grid">
+                        <div class="expense-card">
+                            <div class="expense-header">
+                                <h3 id="hh2">Expense 1</h3>
+                                <div class="expense-actions">
+                                    <button class="btn-icon btn-edit" onclick="change2()">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon btn-delete" onclick="del2()">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="display_expense1" class="expense-value">0</div>
+                        </div>
+                        
+                        <div class="expense-card">
+                            <div class="expense-header">
+                                <h3 id="hh3">Expense 2</h3>
+                                <div class="expense-actions">
+                                    <button class="btn-icon btn-edit" onclick="change3()">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon btn-delete" onclick="del3()">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="display_expense2" class="expense-value">0</div>
+                        </div>
+                        
+                        <div class="expense-card">
+                            <div class="expense-header">
+                                <h3 id="hh4">Expense 3</h3>
+                                <div class="expense-actions">
+                                    <button class="btn-icon btn-edit" onclick="change4()">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon btn-delete" onclick="del4()">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="display_expense3" class="expense-value">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <h4><i class="fas fa-receipt"></i> Total Expenses</h4>
+                            <input type="number" id="totalid" value="0" readonly>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <h4><i class="fas fa-piggy-bank"></i> Savings</h4>
+                            <input type="text" id="saving" value="0" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 Professional Budget Tracker | Designed for smart financial management</p>
+        </div>
+    </div>
+    
+    <script>
+        // All your original JavaScript code remains unchanged below
+        let form_variable=document.getElementById('form_id')
+        let income_entry_variable=document.getElementById('income_entry_field')
+        let expense_entry_variable1=document.getElementById('expense_entry_field1')
+        let expense_entry_variable2=document.getElementById('expense_entry_field2')
+        let expense_entry_variable3=document.getElementById('expense_entry_field3')
+
+        let display_income=document.getElementById('display_income')
+        let display_expense1=document.getElementById('display_expense1')
+        let display_expense2=document.getElementById('display_expense2')
+        let display_expense3=document.getElementById('display_expense3')
+
+        let hh1=document.getElementById('hh1')
+        let hh2=document.getElementById('hh2')
+        let hh3=document.getElementById('hh3')
+        let hh4=document.getElementById('hh4')
+
+        let totalid=document.getElementById('totalid')
+        let saving=document.getElementById('saving')
+
+        let store=JSON.parse(localStorage.getItem('key')) || []
+
+       function boss(){
+        let income=Number(income_entry_variable.value.trim())
+        let expense1=Number(expense_entry_variable1.value.trim())
+        let expense2=Number(expense_entry_variable2.value.trim())
+        let expense3=Number(expense_entry_variable3.value.trim())
+
+       store.push({
+           addincome:income || "",
+           addexpense1:expense1 || "",
+           addexpense2:expense2 || "",
+           addexpense3:expense3 || ""
+       })
+
+       localStorage.setItem('key',JSON.stringify(store));
+
+       income_entry_variable.value=''
+       expense_entry_variable1.value=''
+       expense_entry_variable2.value=''
+       expense_entry_variable3.value=''
+
+        displaybalance();
+       }
+
+function displaybalance() {
+    display_income.innerHTML = "";
+    display_expense1.innerHTML = "";
+    display_expense2.innerHTML = "";
+    display_expense3.innerHTML = "";
+
+    let Totalexpenses = 0;
+    let Totalincome = 0;
+
+    store.forEach(Element => {
+        display_income.innerHTML += `<h1>${Element.addincome}</h1>`;
+        display_expense1.innerHTML += `<h1>${Element.addexpense1}</h1>`;
+        display_expense2.innerHTML += `<h1>${Element.addexpense2}</h1>`;
+        display_expense3.innerHTML += `<h1>${Element.addexpense3}</h1>`;
+
+        Totalincome += Number(Element.addincome);
+        Totalexpenses += Number(Element.addexpense1) + Number(Element.addexpense2) + Number(Element.addexpense3);
+    });
+
+    totalid.value = Totalexpenses;
+    let totalsaving = Totalincome - Totalexpenses;
+
+    if (Totalincome === 0 && Totalexpenses === 0) {
+        saving.value = "";
+    } else if (totalsaving <= 0) {
+        saving.value = "No savings";
+    } else {
+        saving.value = totalsaving;
+    }
+}
+
+displaybalance();
+
+function change2() {
+   let name = prompt('Enter name for income field:');
+  if (name) {
+    hh2.innerText = name.trim();
+    localStorage.setItem('hh2_name', name.trim());
+  }
+}
+hh2.innerText=localStorage.getItem('hh2_name') || "Expense 1"
+
+function change3() {
+   let name = prompt('Enter name for income field:');
+  if (name) {
+    hh3.innerText = name.trim();
+    localStorage.setItem('hh3_name', name.trim());
+  }
+}
+hh3.innerText=localStorage.getItem('hh3_name') || "Expense 2"
+
+function change4() {
+   let name = prompt('Enter name for income field:');
+  if (name) {
+    hh4.innerText = name.trim();
+    localStorage.setItem('hh4_name', name.trim());
+  }
+}
+hh4.innerText=localStorage.getItem('hh4_name') || "Expense 3"
+
+function del(){
+  store.forEach(element => {
+      element.addincome=""
+  });
+  localStorage.setItem('key',JSON.stringify(store));
+  displaybalance();
+}
+
+function del2(){
+  store.forEach(element => {
+      element.addexpense1=""
+  });
+  localStorage.setItem('key',JSON.stringify(store));
+  displaybalance();
+}
+
+function del3(){
+  store.forEach(element => {
+      element.addexpense2=""
+  });
+  localStorage.setItem('key',JSON.stringify(store));
+  displaybalance();
+}
+
+function del4(){
+  store.forEach(element => {
+      element.addexpense3=""
+  });
+  localStorage.setItem('key',JSON.stringify(store));
+  displaybalance();
+}
+
+function globalremove(){
+    store.forEach(element => {
+      element.addincome=""
+      element.addexpense1=""
+      element.addexpense2=""
+      element.addexpense3=""
+    });
+    localStorage.setItem('key',JSON.stringify(store));
+    displaybalance();
+}
+    </script>
+</body>
+</html>
